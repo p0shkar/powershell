@@ -24,16 +24,20 @@
     Creation Date:  2020-03-03
 #>
 
+#----[ PARAMS ]----#
+param(
+    [Parameter(Mandatory=$false)][int]$DaysAgoStart = 1,
+    [Parameter(Mandatory=$false)][int]$DaysAgoEnd = 0,
+    [Parameter(Mandatory=$false)][int]$ResultSize = 5000,
+    [Parameter(Mandatory=$false)][String[]]$Operations = "MailboxLogin", #"UserLoggedIn",
+    [Parameter(Mandatory=$false)][String]$FileName = (Join-Path -Path $env:Temp -ChildPath "$(Get-Date -f "yyMMdd-HHmmss")-AuditLog")
+)
+
 #----[ CONNECT TO EXO ]----#
 #require module: ExchangeOnlineManagement
 Connect-ExchangeOnline
 
 #----[ VARIABLES ]----#
-[int]$DaysAgoStart = 1
-[int]$DaysAgoEnd = 0
-[int]$ResultSize = 5000
-$Operations = "MailboxLogin" #, "UserLoggedIn"
-$FileName = Join-Path -Path "C:\Temp\" -ChildPath "$(Get-Date -f "yyMMdd-HHmmss")-AuditLog" #Join-Path -Path $env:Temp -ChildPath "$(Get-Date -f "yyMMdd-HHmmss")-AuditLog"
 $StartDate = ((Get-Date).AddDays(-$DaysAgoStart)).ToUniversalTime()
 $EndDate = ((Get-Date).AddDays(-$DaysAgoEnd)).ToUniversalTime()
 
