@@ -26,16 +26,18 @@
 
 #----[ PARAMS ]----#
 param(
-    [Parameter(Mandatory=$false)][int]$DaysAgoStart = 1,
-    [Parameter(Mandatory=$false)][int]$DaysAgoEnd = 0,
-    [Parameter(Mandatory=$false)][int]$ResultSize = 5000,
-    [Parameter(Mandatory=$false)][String[]]$Operations = "MailboxLogin", #"UserLoggedIn",
-    [Parameter(Mandatory=$false)][String]$FileName = (Join-Path -Path $env:Temp -ChildPath "$(Get-Date -f "yyMMdd-HHmmss")-AuditLog")
+    [Parameter(Mandatory = $false)][int]$DaysAgoStart = 1,
+    [Parameter(Mandatory = $false)][int]$DaysAgoEnd = 0,
+    [Parameter(Mandatory = $false)][int]$ResultSize = 5000,
+    [Parameter(Mandatory = $false)][String[]]$Operations = "MailboxLogin", #"UserLoggedIn",
+    [Parameter(Mandatory = $false)][String]$FileName = (Join-Path -Path $env:Temp -ChildPath "$(Get-Date -f "yyMMdd-HHmmss")-AuditLog")
 )
 
 #----[ CONNECT TO EXO ]----#
 #require module: ExchangeOnlineManagement
-Connect-ExchangeOnline
+if (!(Get-PSSession | ? { $_.ComputerName -eq "outlook.office365.com" -and $_.ConfigurationName -eq "Microsoft.Exchange" -and $_.State -eq "Opened" })) {
+    Connect-ExchangeOnline
+}
 
 #----[ VARIABLES ]----#
 $StartDate = ((Get-Date).AddDays(-$DaysAgoStart)).ToUniversalTime()
@@ -45,8 +47,8 @@ $EndDate = ((Get-Date).AddDays(-$DaysAgoEnd)).ToUniversalTime()
 $SearchResult = Search-UnifiedAuditLog -StartDate $StartDate -EndDate $EndDate -Formatted -ResultSize $ResultSize -Operations $Operations
 $FilteredResult = $SearchResult | Select-Object -ExpandProperty AuditData | ConvertFrom-Json |
     Select CreationTime, Operation, RecordType, ResultStatus, Workload, UserId,
-        @{N="AuthMethod";E={(($_.ClientInfoString -split "=",0)[1] -split ";")[0]}},
-        @{N="DeviceOrProtocol";E={(($_.ClientInfoString -split "=",2)[1] -split ";",2).TrimStart(" ")[1]}}
+        @{N = "AuthMethod"; E = { (($_.ClientInfoString -split "=", 0)[1] -split ";")[0] } },
+        @{N = "DeviceOrProtocol"; E = { (($_.ClientInfoString -split "=", 2)[1] -split ";", 2).TrimStart(" ")[1] } }
 
 #----[ REPORT CONSOLE ]----#
 #$FilteredResult | ft -AutoSize -Wrap
