@@ -19,7 +19,6 @@
     This script uses the ImportExcel module to export the results, remove this and uncomment the rows above to print to screen or
     export to CSV instead. https://github.com/dfinke/ImportExcel
 .NOTES
-    Version:        1.0
     Author:         Oskar Noren
     Creation Date:  2020-03-03
 #>
