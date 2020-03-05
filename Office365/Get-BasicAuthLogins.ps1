@@ -58,4 +58,4 @@ $FilteredResult = $SearchResult | Select-Object -ExpandProperty AuditData | Conv
 
 #----[ REPORT XLSX ]----#
 #require module: ImportExcel
-$FilteredResult | Export-Excel -Path ($FileName + ".xlsx") -WorksheetName $FileName -AutoFilter -AutoSize -FreezeTopRow -BoldTopRow -Show
+$FilteredResult | Export-Excel -Path ($FileName + ".xlsx") -WorksheetName ($FileName | Split-Path -Leaf) -AutoFilter -AutoSize -FreezeTopRow -BoldTopRow -Show
