@@ -1,4 +1,5 @@
 function Test-MSOLConnection {
+    #requires -Modules MSOnline
     Get-MsolDomain -ErrorAction SilentlyContinue | Out-Null
     $Result = $?
     return $Result
@@ -14,6 +15,7 @@ function Test-EXOConnection {
 }
 
 function Test-AADConnection {
+    #requires -Modules AzureAD
     try {
         $SessionInfo = Get-AzureADCurrentSessionInfo -ErrorAction SilentlyContinue
         return $true
@@ -24,10 +26,12 @@ function Test-AADConnection {
 }
 
 function Get-CurrentUserEmail {
+    #require a network connection to the AD server (local network or VPN)
     (([ADSI]"LDAP://$(whoami /fqdn)").mail).ToString()
 }
 
-function Get-MailboxLocation {
+function Get-UserMailboxLocation {
+    #requires -Modules MSOnline
     param(
         [Parameter(Mandatory = $true)][Microsoft.Online.Administration.User[]]$MSOLUsers,
         [switch]$OnlyCloud,
@@ -54,7 +58,10 @@ function Get-MailboxLocation {
     },
     isLicensed, Licenses
 
-    if ($OnlyCloud) {
+    if($OnlyCloud -and $OnlyOnPrem){
+        Write-Error -Message "Can't specify both -OnlyCloud and -OnlyOnPrem" -Category InvalidOperation
+    }
+    elseif ($OnlyCloud) {
         return ($Report | ? { $_.MailboxLocation -eq "Office365" })
     }
     elseif ($OnlyOnPrem) {
