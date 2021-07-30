@@ -25,9 +25,26 @@ function Test-AADConnection {
     }
 }
 
+function Test-IntuneConnection {
+    #requires -Modules Microsoft.Graph.Intune
+    try {
+        $SessionInfo = Get-Organization -ErrorAction SilentlyContinue
+        return $true
+    }
+    catch {
+        return $false
+    }
+}
+
 function Get-CurrentUserEmail {
     #require a network connection to the AD server (local network or VPN)
-    (([ADSI]"LDAP://$(whoami /fqdn)").mail).ToString()
+    try{
+        (([ADSI]"LDAP://$(whoami /fqdn)").mail).ToString()
+    }
+    catch{
+        Write-Warning -Message "No network access to AD server." -Verbose
+        Read-Host -Prompt "Enter cloud username"
+    }
 }
 
 function Get-UserMailboxLocation {
