@@ -1,3 +1,4 @@
+#Roll ability scores for D&D 5E
 function New-CharacterStats {
     Param(
         [switch]$Verbose
