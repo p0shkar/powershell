@@ -49,7 +49,18 @@ function Show-Feedback($guess, $secret) {
 
 #region | VARIABLES
 # List of 5-letter words (you can expand this list)
-$words = @("apple", "grape", "pearl", "table", "chair", "plant", "bread", "crane", "flame", "stone")
+$words = @(
+    "flame", "stone", "sword", "magic", "quest", "giant", "witch", "knave", "beast", "armor",
+    "blade", "cloak", "elven", "dwarf", "fairy", "spell", "torch", "crown", "raven", "vigor",
+    "troll", "griff", "lance", "pagan", "altar", "forge", "golem", "herbs", "joust", "knoll",
+    "nymph", "ogres", "pouch", "realm", "rider", "siege", "thief", "vigil", "wight", "wyver",
+    "abbey", "basil", "charm", "crypt", "drake", "ember", "fauna", "ghoul", "hydra", "ivory",
+    "arrow", "bards", "brave", "curse", "demon", "elves", "fable", "faith", "feast", "vexed",
+    "frost", "ghost", "guard", "haunt", "honor", "jewel", "knock", "lords", "maids", "mirth",
+    "mines", "moons", "noble", "orcas", "pacts", "pious", "plume", "pride", "runes", "sages",
+    "rings", "ruins", "saint", "shade", "sheep", "shrew", "spies", "spook", "steed", "tombs",
+    "sworn", "tales", "titan", "tower", "vines", "wands", "wrath", "siren", "relic", "fiend"
+)
 $maxTries = 6
 #endregion | VARIABLES
 
