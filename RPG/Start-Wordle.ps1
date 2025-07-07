@@ -49,6 +49,7 @@ function Show-Feedback($guess, $secret) {
 
 #region | VARIABLES
 # List of 5-letter words (you can expand this list)
+$maxTries = 6
 $words = @(
     "flame", "stone", "sword", "magic", "quest", "giant", "witch", "knave", "beast", "armor",
     "blade", "cloak", "elven", "dwarf", "fairy", "spell", "torch", "crown", "raven", "vigor",
@@ -61,7 +62,6 @@ $words = @(
     "rings", "ruins", "saint", "shade", "sheep", "shrew", "spies", "spook", "steed", "tombs",
     "sworn", "tales", "titan", "tower", "vines", "wands", "wrath", "siren", "relic", "fiend"
 )
-$maxTries = 6
 #endregion | VARIABLES
 
 # Build the alphabet dictionary
