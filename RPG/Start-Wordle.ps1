@@ -45,6 +45,17 @@ function Show-Feedback($guess, $secret) {
     }
     Write-Host $output
 }
+
+# Validate word using dictionaryapi.dev (free web dictionary)
+function Is-ValidWord($word) {
+    $url = "https://api.dictionaryapi.dev/api/v2/entries/en/$word"
+    try {
+        $response = Invoke-RestMethod -Uri $url -Method Get -ErrorAction Stop
+        return $true
+    } catch {
+        return $false
+    }
+}
 #endregion | FUNCTIONS
 
 #region | VARIABLES
@@ -53,9 +64,9 @@ $maxTries = 6
 $words = @(
     "flame", "stone", "sword", "magic", "quest", "giant", "witch", "knave", "beast", "armor",
     "blade", "cloak", "elven", "dwarf", "fairy", "spell", "torch", "crown", "raven", "vigor",
-    "troll", "griff", "lance", "pagan", "altar", "forge", "golem", "herbs", "joust", "knoll",
+    "troll", "traps", "lance", "pagan", "altar", "forge", "golem", "herbs", "joust", "knoll",
     "nymph", "ogres", "pouch", "realm", "rider", "siege", "thief", "vigil", "wight", "wyver",
-    "abbey", "basil", "charm", "crypt", "drake", "ember", "fauna", "ghoul", "hydra", "ivory",
+    "abbey", "horse", "charm", "crypt", "drake", "ember", "fauna", "ghoul", "hydra", "ivory",
     "arrow", "bards", "brave", "curse", "demon", "elves", "fable", "faith", "feast", "vexed",
     "frost", "ghost", "guard", "haunt", "honor", "jewel", "knock", "lords", "maids", "mirth",
     "mines", "moons", "noble", "orcas", "pacts", "pious", "plume", "pride", "runes", "sages",
@@ -79,6 +90,11 @@ for ($try = 1; $try -le $maxTries; $try++) {
     $guess = $guess.ToLower()
     if ($guess.Length -ne 5) {
         Write-Warning -Message "Please enter a 5-letter word."
+        $try--
+        continue
+    }
+    if (-not (Is-ValidWord -Word $guess)) {
+        Write-Warning -Message "Not a word in the dictionary."
         $try--
         continue
     }
